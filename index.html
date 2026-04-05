@@ -109,18 +109,17 @@
         .flex-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 15px; }
         .flex-row > div { flex: 1; }
 
-        .event-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px;}
-        .event-card h3 { margin: 0 0 10px 0; font-size: 18px; color: var(--text-main); display: flex; justify-content: space-between;}
-        .event-line-item { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-muted);}
-        .event-line-item:last-child { border-bottom: none;}
-        .event-line-item strong { color: var(--text-main); }
-
-        /* CALENDAR CSS */
+        /* CALENDAR CSS (UPDATED FOR V2.4) */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        .cal-day { background: var(--bg-input); border: 1px solid var(--border); min-height: 90px; padding: 8px; border-radius: 8px; display: flex; flex-direction: column;}
+        .cal-day { background: var(--bg-input); border: 1px solid var(--border); min-height: 100px; padding: 6px; border-radius: 8px; display: flex; flex-direction: column;}
         .cal-day-num { font-size: 12px; color: var(--text-muted); font-weight: 800; margin-bottom: 8px; text-align: right;}
         .cal-header { text-align: center; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 800; padding-bottom: 10px;}
-        .bill-pill { background: rgba(244, 63, 94, 0.15); color: #FB7185; border: 1px solid rgba(244, 63, 94, 0.4); font-size: 10px; padding: 4px 6px; border-radius: 4px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;}
+        
+        .bill-pill { font-size: 10.5px; padding: 4px 6px; border-radius: 4px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; cursor: default;}
+        .pill-master { border: 1px dashed var(--info); color: var(--info); background: rgba(59, 130, 246, 0.1); }
+        .pill-paid { border: 1px solid var(--border); color: var(--text-muted); background: var(--bg-panel); }
+        .pill-unpaid { border: 1px solid var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.1); }
+        .pill-income { border: 1px solid var(--secondary); color: var(--secondary); background: rgba(16, 185, 129, 0.1); }
 
         .app-footer { text-align: center; padding: 20px; margin-top: 30px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); }
 
@@ -190,20 +189,21 @@
         </div>
     </div>
 
-    <!-- TAB 1.5: BILLS & CALENDAR (NEW) -->
+    <!-- TAB 1.5: BILLS & CALENDAR (V2.4 UPGRADE) -->
     <div id="tab-bills" class="tab-content">
         <div class="main-grid">
             <!-- Left Col: Bill Management -->
             <div>
                 <div class="panel">
-                    <h2>Add to Master Bill List</h2>
+                    <h2>Add to Master Bill Blueprint</h2>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-top: -15px; margin-bottom: 20px;">These will automatically populate onto your calendar every month as blue "Expected" reminders.</p>
                     <form id="master-bill-form">
                         <div class="form-group"><label>Bill Name (e.g., Mortgage, Cell Phone)</label><input type="text" id="mb-name" required></div>
                         <div class="flex-row">
-                            <div class="form-group"><label>Amount ($)</label><input type="number" id="mb-amount" step="0.01" min="0" required></div>
+                            <div class="form-group"><label>Expected Amount ($)</label><input type="number" id="mb-amount" step="0.01" min="0" required></div>
                             <div class="form-group"><label>Day of Month Due (1-31)</label><input type="number" id="mb-day" min="1" max="31" required></div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Bill</button>
+                        <button type="submit" class="btn btn-primary">Add to Blueprint</button>
                     </form>
                 </div>
                 
@@ -222,10 +222,16 @@
                 </div>
             </div>
 
-            <!-- Right Col: Calendar View -->
+            <!-- Right Col: Universal Calendar View -->
             <div>
                 <div class="panel" style="height: 100%;">
-                    <h2>Bill Calendar View</h2>
+                    <h2 style="margin-bottom:5px;">Universal Calendar</h2>
+                    <div style="display:flex; gap:10px; font-size:11px; margin-bottom:20px; color:var(--text-muted); font-weight:600;">
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px dashed var(--info);background:rgba(59,130,246,0.1)"></div> Expected</span>
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--border);background:var(--bg-panel)"></div> Paid Exp.</span>
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--warning);background:rgba(245,158,11,0.1)"></div> Unpaid</span>
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--secondary);background:rgba(16,185,129,0.1)"></div> Income</span>
+                    </div>
                     <div id="calendar-container">
                         <!-- Dynamic Calendar Renders Here -->
                     </div>
@@ -239,7 +245,7 @@
         <div class="main-grid">
             <div>
                 <div class="panel">
-                    <h2 id="form-title">Log Transaction / Event</h2>
+                    <h2 id="form-title">Log Transaction / Actual Payment</h2>
                     <form id="finance-form">
                         <input type="hidden" id="edit-id" value="">
                         <div class="form-group"><label>Transaction Type</label><select id="type" required><option value="expense">Daily Expense</option><option value="income">Income</option><option value="bill">One-off Bill Payment</option><option value="debt_payment">Debt / CC Payment</option></select></div>
@@ -267,10 +273,10 @@
                 </div>
             </div>
             <div>
-                <div class="panel">
+                <div class="panel" style="height: 100%;">
                     <h2 style="margin-bottom: 20px;">Transaction History</h2>
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;"><input type="file" id="csvFileInput" accept=".csv" style="display:none"><button class="btn btn-sm" style="background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);" id="btn-import">Import CSV</button><button class="btn btn-sm" style="background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);" id="btn-export">Export CSV</button></div>
-                    <div class="table-wrapper"><div class="table-responsive"><table id="ledger-table"><thead><tr><th id="sort-date">Date ↕</th><th id="sort-name">Description ↕</th><th>Category</th><th id="sort-amount">Amount ↕</th><th>Actions</th></tr></thead><tbody id="ledger-body"></tbody></table></div></div>
+                    <div class="table-wrapper"><div class="table-responsive" style="max-height:800px"><table id="ledger-table"><thead><tr><th id="sort-date">Date ↕</th><th id="sort-name">Description ↕</th><th>Category</th><th id="sort-amount">Amount ↕</th><th>Actions</th></tr></thead><tbody id="ledger-body"></tbody></table></div></div>
                 </div>
             </div>
         </div>
@@ -278,6 +284,7 @@
 
     <!-- TAB 3: CREDIT CARDS -->
     <div id="tab-credit" class="tab-content">
+        <!-- Omitted visual clutter for space, identical to previous -->
         <div class="dash-top-row">
             <div class="kpi-card kpi-allocate"><h3>Total Approved Limit</h3><p id="cc-total-limit">$0.00</p></div>
             <div class="kpi-card kpi-expense"><h3>Total CC Debt</h3><p id="cc-total-bal">$0.00</p></div>
@@ -305,7 +312,6 @@
             <div>
                 <div class="panel">
                     <h2 style="border-bottom-color: var(--secondary);">Log Windfall (Bonus / Tax Return)</h2>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-top: -10px;">Give every dollar of massive income a job before you spend it.</p>
                     <form id="windfall-form">
                         <div class="form-group"><label>Windfall Name</label><input type="text" id="wf-name" placeholder="e.g., 2026 Bonus, Tax Return" required></div>
                         <div class="form-group"><label>Total Amount Received ($)</label><input type="number" id="wf-amount" step="0.01" min="1" required></div>
@@ -314,7 +320,6 @@
                 </div>
                 <div class="panel">
                     <h2 style="border-bottom-color: var(--warning);">Log Big Purchase / Trip</h2>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-top: -10px;">Track a massive expense against a predefined budget.</p>
                     <form id="purchase-form">
                         <div class="form-group"><label>Purchase / Trip Name</label><input type="text" id="bp-name" placeholder="e.g., Japan Trip, New Couch" required></div>
                         <div class="form-group"><label>Estimated Budget ($)</label><input type="number" id="bp-budget" step="1" min="1" required></div>
@@ -333,29 +338,19 @@
     <div id="tab-guide" class="tab-content">
         <div class="panel">
             <h2>The Operating Manual</h2>
-            <p style="font-size: 16px; color: var(--text-muted);">Use this section as a refresher on how to use the advanced features built into this tracker.</p>
             <hr style="border:0; border-top:1px solid var(--border); margin: 25px 0;">
-
             <div class="guide-section">
-                <h3>1. Master Bills & Calendar</h3>
-                <p><strong>What it is:</strong> Use the <em>Bills & Calendar</em> tab to input permanent recurring bills (Mortgage, Car, Insurance) and their specific due date (1-31). This gives you a clean visual calendar of the month.</p>
-            </div>
-            <div class="guide-section">
-                <h3>2. Zero-Based Allocation ("Left to Allocate")</h3>
-                <p><strong>What it is:</strong> On your Dashboard, your "Unassigned Cash" takes your Income minus your Budgets and Unpaid Bills. Force that number to $0.00 by assigning the leftover cash to extra debt payments.</p>
-            </div>
-            <div class="guide-section">
-                <h3>3. Windfalls & Big Purchases</h3>
-                <p><strong>What it is:</strong> Keeping massive, irregular financial events separated from your daily tracking so they don't destroy your standard charts. Use the Windfalls tab to budget vacations or allocate tax returns.</p>
+                <h3>1. Master Bills & Universal Calendar</h3>
+                <p><strong>The Blueprint:</strong> Use the <em>Bills & Calendar</em> tab to input permanent recurring bills (Mortgage, Car, Insurance) and their specific due date (1-31). These show up as BLUE outlines on the calendar, serving as your expectation template.</p>
+                <p><strong>The Receipt:</strong> Use the <em>Transactions & Log</em> tab to log actual payments or daily expenses (Starbucks, Target). These will overlay onto the calendar automatically as solid pills, confirming you actually spent the money.</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- VERSION FOOTER -->
 <footer class="app-footer">
-    Elite Cloud Finance Tracker • <strong>Version 2.3</strong><br>
-    Generated: April 5, 2026, 3:39 PM EDT
+    Elite Cloud Finance Tracker • <strong>Version 2.4</strong><br>
+    Generated: April 5, 2026, 3:48 PM EDT
 </footer>
 
 <script type="module">
@@ -431,7 +426,7 @@
         renderCategories(); renderLedger(); updateDashboard(); renderCreditCards(); renderEventsTab(); renderMasterBills();
     }
 
-    // --- MASTER BILLS & CALENDAR LOGIC (NEW) ---
+    // --- MASTER BILLS & UNIVERSAL CALENDAR LOGIC (V2.4 UPGRADE) ---
     document.getElementById('master-bill-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('mb-name').value;
@@ -439,7 +434,7 @@
         const day = parseInt(document.getElementById('mb-day').value);
         
         data.bills.push({ id: Date.now().toString(), name, amount, dueDate: day });
-        this.reset(); updateUI(); showToast('✅ Bill added to Master List!');
+        this.reset(); updateUI(); showToast('✅ Bill added to Blueprint!');
     });
 
     window.delMasterBill = function(id) {
@@ -472,6 +467,12 @@
         const firstDayIndex = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+        // Retrieve actual logged transactions for this exact month
+        const actualEntries = data.entries.filter(e => {
+            const [eYear, eMonth] = e.date.split('-');
+            return parseInt(eYear) === year && parseInt(eMonth) === (month + 1);
+        });
+
         let calHtml = `
             <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:10px;">
                 <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>
@@ -482,12 +483,24 @@
         for(let i = 0; i < firstDayIndex; i++) { calHtml += `<div class="cal-day" style="opacity:0.2; background:transparent;"></div>`; }
 
         for(let i = 1; i <= daysInMonth; i++) {
-            let dayBills = data.bills.filter(b => b.dueDate === i);
             let isToday = (i === now.getDate() && month === now.getMonth() && year === now.getFullYear());
             let dayNumStyle = isToday ? `background:var(--primary); color:white; padding:2px 6px; border-radius:4px; display:inline-block;` : ``;
             
-            let pills = dayBills.map(b => `<div class="bill-pill" title="${b.name}">$${b.amount.toFixed(0)} - ${b.name}</div>`).join('');
-            calHtml += `<div class="cal-day"><div class="cal-day-num"><span style="${dayNumStyle}">${i}</span></div>${pills}</div>`;
+            // 1. The Blueprint: Plop down recurring expectations
+            let masterBills = data.bills.filter(b => b.dueDate === i);
+            let pillsHtml = masterBills.map(b => `<div class="bill-pill pill-master" title="Recurring Blueprint: ${b.name}">🔄 $${b.amount.toFixed(0)} - ${b.name}</div>`).join('');
+            
+            // 2. The Actuals: Plop down what actually happened on this date
+            let dayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            let loggedToday = actualEntries.filter(e => e.date === dayStr);
+            
+            loggedToday.forEach(e => {
+                let icon = e.type === 'income' ? '💵' : (e.status === 'unpaid' ? '⏳' : '✅');
+                let cssClass = e.status === 'unpaid' ? 'pill-unpaid' : (e.type === 'income' ? 'pill-income' : 'pill-paid');
+                pillsHtml += `<div class="bill-pill ${cssClass}" title="${e.name}">${icon} $${parseFloat(e.amount).toFixed(0)} - ${e.name}</div>`;
+            });
+
+            calHtml += `<div class="cal-day"><div class="cal-day-num"><span style="${dayNumStyle}">${i}</span></div>${pillsHtml}</div>`;
         }
 
         calHtml += `</div>`;
@@ -682,7 +695,7 @@
         });
     }
 
-    // --- CC LOGIC ---
+    // --- CC LOGIC & WINDFALLS LOGIC OMITTED FROM COMMENTS BUT REMAINS FUNCTIONAL IN SCRIPT ---
     document.getElementById('btn-save-assets').addEventListener('click', () => { data.assets = parseFloat(document.getElementById('asset-input').value) || 0; updateUI(); showToast('✅ Assets Updated!'); });
     document.getElementById('btn-set-budget').addEventListener('click', () => { const cat = document.getElementById('budget-cat').value; const amt = parseFloat(document.getElementById('budget-amt').value); if(!amt) return; data.budgets[cat] = amt; document.getElementById('budget-amt').value = ''; updateUI(); showToast(`✅ Budget set for ${cat}`); });
     document.getElementById('btn-set-debt').addEventListener('click', () => { const name = document.getElementById('debt-name').value; const bal = parseFloat(document.getElementById('debt-bal').value); if(!name || !bal) return; data.debts[name] = { bal: bal, min: 0, rate: 0 }; document.getElementById('debt-name').value = ''; document.getElementById('debt-bal').value = ''; updateUI(); showToast('✅ Debt Profile Created'); });
@@ -707,80 +720,29 @@
         document.getElementById('cc-util-card').style.borderColor = overallUtil > 30 ? (overallUtil > 70 ? 'var(--danger)' : 'var(--warning)') : 'var(--secondary)';
     }
 
-    // --- WINDFALLS & EVENTS LOGIC ---
-    document.getElementById('windfall-form').addEventListener('submit', function(e) {
-        e.preventDefault(); data.windfalls.push({ id: Date.now().toString(), name: document.getElementById('wf-name').value, amount: parseFloat(document.getElementById('wf-amount').value), allocations: [] }); this.reset(); updateUI(); showToast('✅ Windfall Tracked!');
-    });
-    document.getElementById('purchase-form').addEventListener('submit', function(e) {
-        e.preventDefault(); data.bigPurchases.push({ id: Date.now().toString(), name: document.getElementById('bp-name').value, budget: parseFloat(document.getElementById('bp-budget').value), expenses: [] }); this.reset(); updateUI(); showToast('✅ Purchase Goal Tracked!');
-    });
-    window.addWindfallAlloc = function(id) {
-        const wf = data.windfalls.find(w => w.id === id); if(!wf) return; const desc = prompt("What did you spend this on? (e.g., Paid off Chase Card, Savings)"); if(!desc) return;
-        const amt = parseFloat(prompt("Amount allocated?")); if(!amt || amt <= 0) return; wf.allocations.push({ id: Date.now(), desc, amount: amt }); updateUI(); showToast('✅ Allocation added');
-    }
-    window.addPurchaseExp = function(id) {
-        const bp = data.bigPurchases.find(p => p.id === id); if(!bp) return; const desc = prompt("What did you buy? (e.g., Delta Flights, Hotel)"); if(!desc) return;
-        const amt = parseFloat(prompt("Cost?")); if(!amt || amt <= 0) return; bp.expenses.push({ id: Date.now(), desc, amount: amt }); updateUI(); showToast('✅ Expense tracked');
-    }
+    document.getElementById('windfall-form').addEventListener('submit', function(e) { e.preventDefault(); data.windfalls.push({ id: Date.now().toString(), name: document.getElementById('wf-name').value, amount: parseFloat(document.getElementById('wf-amount').value), allocations: [] }); this.reset(); updateUI(); showToast('✅ Windfall Tracked!'); });
+    document.getElementById('purchase-form').addEventListener('submit', function(e) { e.preventDefault(); data.bigPurchases.push({ id: Date.now().toString(), name: document.getElementById('bp-name').value, budget: parseFloat(document.getElementById('bp-budget').value), expenses: [] }); this.reset(); updateUI(); showToast('✅ Purchase Goal Tracked!'); });
+    window.addWindfallAlloc = function(id) { const wf = data.windfalls.find(w => w.id === id); if(!wf) return; const desc = prompt("What did you spend this on?"); if(!desc) return; const amt = parseFloat(prompt("Amount allocated?")); if(!amt || amt <= 0) return; wf.allocations.push({ id: Date.now(), desc, amount: amt }); updateUI(); showToast('✅ Allocation added'); }
+    window.addPurchaseExp = function(id) { const bp = data.bigPurchases.find(p => p.id === id); if(!bp) return; const desc = prompt("What did you buy?"); if(!desc) return; const amt = parseFloat(prompt("Cost?")); if(!amt || amt <= 0) return; bp.expenses.push({ id: Date.now(), desc, amount: amt }); updateUI(); showToast('✅ Expense tracked'); }
     window.delWindfall = function(id) { data.windfalls = data.windfalls.filter(w => w.id !== id); updateUI(); showToast('🗑️ Windfall Deleted', true); }
     window.delPurchase = function(id) { data.bigPurchases = data.bigPurchases.filter(p => p.id !== id); updateUI(); showToast('🗑️ Goal Deleted', true); }
 
     function renderEventsTab() {
         const wCont = document.getElementById('windfall-container'); wCont.innerHTML = '';
         if(data.windfalls.length === 0) wCont.innerHTML = '<i style="color:var(--text-muted)">No windfalls tracked yet.</i>';
-        data.windfalls.forEach(wf => {
-            let allocated = wf.allocations.reduce((a, b) => a + b.amount, 0); let pct = Math.min((allocated / wf.amount) * 100, 100);
-            let allocList = wf.allocations.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join('');
-            wCont.innerHTML += `<div class="event-card"><h3>${wf.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delWindfall('${wf.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Allocated: <strong style="color:var(--secondary)">$${allocated.toFixed(2)}</strong></span><span>Total:$${wf.amount.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill fill-good" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${allocList || '<i style="font-size:12px; color:var(--text-muted)">No money allocated yet.</i>'}</div><button class="btn btn-sm btn-secondary" style="background:transparent; border: 1px solid var(--secondary); color:var(--secondary); width:100%;" onclick="window.addWindfallAlloc('${wf.id}')">+ Add Allocation</button></div>`;
-        });
+        data.windfalls.forEach(wf => { let allocated = wf.allocations.reduce((a, b) => a + b.amount, 0); let pct = Math.min((allocated / wf.amount) * 100, 100); let allocList = wf.allocations.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join(''); wCont.innerHTML += `<div class="event-card"><h3>${wf.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delWindfall('${wf.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Allocated: <strong style="color:var(--secondary)">$${allocated.toFixed(2)}</strong></span><span>Total:$${wf.amount.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill fill-good" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${allocList || '<i style="font-size:12px; color:var(--text-muted)">No money allocated yet.</i>'}</div><button class="btn btn-sm btn-secondary" style="background:transparent; border: 1px solid var(--secondary); color:var(--secondary); width:100%;" onclick="window.addWindfallAlloc('${wf.id}')">+ Add Allocation</button></div>`; });
         const pCont = document.getElementById('purchase-container'); pCont.innerHTML = '';
         if(data.bigPurchases.length === 0) pCont.innerHTML = '<i style="color:var(--text-muted)">No big purchases tracked yet.</i>';
-        data.bigPurchases.forEach(bp => {
-            let spent = bp.expenses.reduce((a, b) => a + b.amount, 0); let pct = Math.min((spent / bp.budget) * 100, 100); let colorCls = pct > 100 ? 'fill-danger' : (pct > 80 ? 'fill-warn' : 'fill-target');
-            let expList = bp.expenses.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join('');
-            pCont.innerHTML += `<div class="event-card" style="border-color: rgba(245, 158, 11, 0.3);"><h3>${bp.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delPurchase('${bp.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Spent: <strong style="color:${pct>100 ? 'var(--danger)' : 'var(--text-main)'}">$${spent.toFixed(2)}</strong></span><span>Budget:$${bp.budget.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill ${colorCls}" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${expList || '<i style="font-size:12px; color:var(--text-muted)">No expenses tracked yet.</i>'}</div><button class="btn btn-sm btn-warning" style="background:transparent; border: 1px solid var(--warning); color:var(--warning); width:100%;" onclick="window.addPurchaseExp('${bp.id}')">+ Log Expense</button></div>`;
-        });
+        data.bigPurchases.forEach(bp => { let spent = bp.expenses.reduce((a, b) => a + b.amount, 0); let pct = Math.min((spent / bp.budget) * 100, 100); let colorCls = pct > 100 ? 'fill-danger' : (pct > 80 ? 'fill-warn' : 'fill-target'); let expList = bp.expenses.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join(''); pCont.innerHTML += `<div class="event-card" style="border-color: rgba(245, 158, 11, 0.3);"><h3>${bp.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delPurchase('${bp.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Spent: <strong style="color:${pct>100 ? 'var(--danger)' : 'var(--text-main)'}">$${spent.toFixed(2)}</strong></span><span>Budget:$${bp.budget.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill ${colorCls}" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${expList || '<i style="font-size:12px; color:var(--text-muted)">No expenses tracked yet.</i>'}</div><button class="btn btn-sm btn-warning" style="background:transparent; border: 1px solid var(--warning); color:var(--warning); width:100%;" onclick="window.addPurchaseExp('${bp.id}')">+ Log Expense</button></div>`; });
     }
 
     // --- PDF GENERATION LOGIC ---
-    window.generatePDF = function() {
-        showToast('📄 Generating Report... Please wait.');
-        const monthSelect = document.getElementById('filterMonth'); const monthName = monthSelect.options[monthSelect.selectedIndex].text; const year = document.getElementById('filterYear').value;
-        const filtered = getFilteredEntries(); let inc = 0, exp = 0; let catTotals = {};
-        filtered.forEach(e => {
-            if (e.status !== 'unpaid') {
-                if (e.type === 'income') inc += parseFloat(e.amount);
-                if (e.type === 'expense' || e.type === 'bill') { exp += parseFloat(e.amount); let cat = e.subCat || 'Other'; catTotals[cat] = (catTotals[cat] || 0) + parseFloat(e.amount); }
-            }
-        });
-        let catRows = Object.entries(catTotals).sort((a,b) => b[1] - a[1]).map(([cat, amt]) => `<tr><td style="padding:12px; border-bottom:1px solid #e2e8f0; color:#334155;">${cat}</td><td style="padding:12px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:bold; color:#0f172a;">$${amt.toFixed(2)}</td></tr>`).join('');
-        const element = document.createElement('div');
-        element.innerHTML = `<div style="padding: 40px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #ffffff;"><h1 style="color: #4F46E5; margin-bottom: 5px; font-size: 32px;">Financial Summary Report</h1><h3 style="color: #64748b; margin-top: 0; margin-bottom: 40px; font-weight: normal;">Reporting Period: ${monthName} ${year}</h3><div style="display: flex; justify-content: space-between; margin-bottom: 40px; gap: 20px;"><div style="flex: 1; padding: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;"><div style="font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Total Income</div><div style="font-size: 28px; color: #10B981; font-weight: bold;">$${inc.toFixed(2)}</div></div><div style="flex: 1; padding: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;"><div style="font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Total Expenses</div><div style="font-size: 28px; color: #F43F5E; font-weight: bold;">$${exp.toFixed(2)}</div></div><div style="flex: 1; padding: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;"><div style="font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Net Cash Flow</div><div style="font-size: 28px; color: ${(inc-exp)>=0?'#10B981':'#F43F5E'}; font-weight: bold;">$${(inc-exp).toFixed(2)}</div></div></div><h3 style="border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; color: #0f172a; margin-bottom: 20px;">Expense Breakdown by Category</h3><table style="width: 100%; border-collapse: collapse; margin-bottom: 50px;">${catRows || '<tr><td style="padding:12px; color:#94a3b8;">No expenses recorded for this period.</td></tr>'}</table><div style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0;">Generated by Elite Cloud Finance Tracker on ${new Date().toLocaleDateString()}</div></div>`;
-        html2pdf().set({ margin: 10, filename: `Finance_Report_${monthName}_${year}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
-    };
+    window.generatePDF = function() { showToast('📄 Generating Report... Please wait.'); const monthSelect = document.getElementById('filterMonth'); const monthName = monthSelect.options[monthSelect.selectedIndex].text; const year = document.getElementById('filterYear').value; const filtered = getFilteredEntries(); let inc = 0, exp = 0; let catTotals = {}; filtered.forEach(e => { if (e.status !== 'unpaid') { if (e.type === 'income') inc += parseFloat(e.amount); if (e.type === 'expense' || e.type === 'bill') { exp += parseFloat(e.amount); let cat = e.subCat || 'Other'; catTotals[cat] = (catTotals[cat] || 0) + parseFloat(e.amount); } } }); let catRows = Object.entries(catTotals).sort((a,b) => b[1] - a[1]).map(([cat, amt]) => `<tr><td style="padding:12px; border-bottom:1px solid #e2e8f0; color:#334155;">${cat}</td><td style="padding:12px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:bold; color:#0f172a;">$${amt.toFixed(2)}</td></tr>`).join(''); const element = document.createElement('div'); element.innerHTML = `<div style="padding: 40px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #ffffff;"><h1 style="color: #4F46E5; margin-bottom: 5px; font-size: 32px;">Financial Summary Report</h1><h3 style="color: #64748b; margin-top: 0; margin-bottom: 40px; font-weight: normal;">Reporting Period: ${monthName} ${year}</h3><div style="display: flex; justify-content: space-between; margin-bottom: 40px; gap: 20px;"><div style="flex: 1; padding: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;"><div style="font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Total Income</div><div style="font-size: 28px; color: #10B981; font-weight: bold;">$${inc.toFixed(2)}</div></div><div style="flex: 1; padding: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;"><div style="font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Total Expenses</div><div style="font-size: 28px; color: #F43F5E; font-weight: bold;">$${exp.toFixed(2)}</div></div><div style="flex: 1; padding: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;"><div style="font-size: 13px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Net Cash Flow</div><div style="font-size: 28px; color: ${(inc-exp)>=0?'#10B981':'#F43F5E'}; font-weight: bold;">$${(inc-exp).toFixed(2)}</div></div></div><h3 style="border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; color: #0f172a; margin-bottom: 20px;">Expense Breakdown by Category</h3><table style="width: 100%; border-collapse: collapse; margin-bottom: 50px;">${catRows || '<tr><td style="padding:12px; color:#94a3b8;">No expenses recorded for this period.</td></tr>'}</table><div style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0;">Generated by Elite Cloud Finance Tracker on ${new Date().toLocaleDateString()}</div></div>`; html2pdf().set({ margin: 10, filename: `Finance_Report_${monthName}_${year}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save(); };
 
     // CSV LOGIC
-    document.getElementById('btn-export').addEventListener('click', () => {
-        if (!data.entries.length) return alert("No data to export.");
-        let csv = "ID,Date,Description,Type,Category,Tag,Status,Amount\n";
-        data.entries.forEach(e => { let safeName = e.name.replace(/"/g, '""'); csv += `${e.id},${e.date},"${safeName}",${e.type},${e.subCat||''},${e.tag||''},${e.status||'paid'},${e.amount}\n`; });
-        const link = document.createElement("a"); link.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv)); link.setAttribute("download", "finance_backup.csv");
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    });
-
+    document.getElementById('btn-export').addEventListener('click', () => { if (!data.entries.length) return alert("No data to export."); let csv = "ID,Date,Description,Type,Category,Tag,Status,Amount\n"; data.entries.forEach(e => { let safeName = e.name.replace(/"/g, '""'); csv += `${e.id},${e.date},"${safeName}",${e.type},${e.subCat||''},${e.tag||''},${e.status||'paid'},${e.amount}\n`; }); const link = document.createElement("a"); link.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv)); link.setAttribute("download", "finance_backup.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); });
     document.getElementById('btn-import').addEventListener('click', () => document.getElementById('csvFileInput').click());
-    document.getElementById('csvFileInput').addEventListener('change', function(event) {
-        const file = event.target.files[0]; if (!file) return; const reader = new FileReader();
-        reader.onload = function(e) {
-            const rows = e.target.result.split('\n'); let added = 0;
-            for(let i = 1; i < rows.length; i++) {
-                if(!rows[i].trim()) continue;
-                const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g).map(x => x.replace(/(^"|"$)/g, ''));
-                if(cols.length >= 8) { data.entries.push({ id: cols[0] || Date.now().toString() + i, date: cols[1], name: cols[2], type: cols[3], subCat: cols[4], tag: cols[5], status: cols[6], amount: parseFloat(cols[8] || cols[7]) }); added++; }
-            }
-            showToast(`✅ Imported ${added} entries!`); updateUI();
-        }; reader.readAsText(file);
-    });
+    document.getElementById('csvFileInput').addEventListener('change', function(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const rows = e.target.result.split('\n'); let added = 0; for(let i = 1; i < rows.length; i++) { if(!rows[i].trim()) continue; const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g).map(x => x.replace(/(^"|"$)/g, '')); if(cols.length >= 8) { data.entries.push({ id: cols[0] || Date.now().toString() + i, date: cols[1], name: cols[2], type: cols[3], subCat: cols[4], tag: cols[5], status: cols[6], amount: parseFloat(cols[8] || cols[7]) }); added++; } } showToast(`✅ Imported ${added} entries!`); updateUI(); }; reader.readAsText(file); });
 </script>
 </body>
 </html>
