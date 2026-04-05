@@ -1,4 +1,4 @@
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyD9AlW7ggavCIKVgE6mHWHsPjJqu1g5hyE",
     authDomain: "finance-tracker-c7ea4.firebaseapp.com",
     projectId: "finance-tracker-c7ea4",
