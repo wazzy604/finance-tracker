@@ -427,7 +427,7 @@
 </div>
 
 <footer class="app-footer">
-    Elite Cloud Finance Tracker • <strong>Version 2.6</strong><br>
+    Elite Cloud Finance Tracker • <strong>Version 2.6.1</strong><br>
     Generated: April 5, 2026
 </footer>
 
@@ -642,7 +642,43 @@
     
     window.deleteEntry = function(id) { data.entries = data.entries.filter(x => x.id !== id.toString()); updateUI(); showToast('🗑️ Entry Deleted', true); };
 
-    // --- V2.6 DASHBOARD ENGINE (Fixes the Master Bills Summary visibility) ---
+    // --- RE-INJECTED LEDGER FUNCTIONS (FIXES THE CRASH) ---
+    function getFilteredEntries() {
+        const mEl = document.getElementById('filterMonth'); const yEl = document.getElementById('filterYear');
+        if(!mEl || !yEl) return [];
+        const month = mEl.value; const year = yEl.value;
+        return data.entries.filter(e => {
+            const [eYear, eMonth] = e.date.split('-');
+            const matchM = month === 'ALL' || eMonth === month; const matchY = year === 'ALL' || eYear === year;
+            return matchM && matchY;
+        });
+    }
+
+    function renderLedger() {
+        const tbody = document.getElementById('ledger-body'); if(!tbody) return; tbody.innerHTML = '';
+        let filtered = getFilteredEntries();
+        filtered.sort((a, b) => {
+            let valA = a[currentSort.column]; let valB = b[currentSort.column];
+            if (currentSort.column === 'amount') { valA = parseFloat(valA); valB = parseFloat(valB); }
+            if (currentSort.column === 'date') { valA = new Date(valA); valB = new Date(valB); }
+            if (valA < valB) return currentSort.dir === 'asc' ? -1 : 1;
+            if (valA > valB) return currentSort.dir === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        filtered.forEach(e => {
+            const tr = document.createElement('tr');
+            let displayCat = e.subCat || '-';
+            if(e.status === 'unpaid') { displayCat += ` <span class="tag tag-unpaid">UNPAID</span>`; } 
+            let color = e.type === 'income' ? 'var(--secondary)' : (e.status === 'unpaid' ? 'var(--text-muted)' : 'var(--text-main)');
+            tr.innerHTML = `<td>${e.date}</td><td style="font-weight:600">${e.name}</td><td>${displayCat}</td><td style="color:${color}; font-weight:700;">$${parseFloat(e.amount).toFixed(2)}</td>
+                <td><button class="btn btn-sm btn-secondary" style="background:var(--bg-input); border:1px solid var(--border);" onclick="window.editEntry('${e.id}')">Edit</button>
+                <button class="btn btn-sm btn-danger" style="background:transparent; color:var(--danger);" onclick="window.deleteEntry('${e.id}')">✖</button></td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- V2.6 DASHBOARD ENGINE ---
     function updateDashboard() {
         const mSel = document.getElementById('filterMonth'); const ySel = document.getElementById('filterYear');
         if(!mSel || !ySel) return;
@@ -817,7 +853,7 @@
                         <div style="font-size: 28px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">$${cc.balance.toFixed(2)}</div>
                     </div>
                     <div style="display:flex; justify-content: space-between; font-size: 12px; opacity: 0.9; font-weight: 500;">
-                        <span>Limit: $${cc.limit.toFixed(2)}</span>
+                        <span>Limit:$${cc.limit.toFixed(2)}</span>
                         <span>Avail: $${(cc.limit - cc.balance).toFixed(2)}</span>
                     </div>
                     <div style="background: rgba(0,0,0,0.4); height: 6px; border-radius: 3px; margin-top: 15px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);">
