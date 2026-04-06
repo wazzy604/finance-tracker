@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aamir's Finance Tracker</title>
+    <title>Elite Cloud Finance Tracker</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -182,6 +182,7 @@
         <button class="tab-btn" onclick="switchTab('tab-events')">Windfalls & Events</button>
     </div>
 
+    <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="dash-top-row">
             <div class="kpi-card kpi-networth"><h3>Total Net Worth</h3><p id="dash-networth">$0.00</p></div>
@@ -265,16 +266,18 @@
         </div>
     </div>
 
+    <!-- TAB 2: BILLS & CALENDAR -->
     <div id="tab-bills" class="tab-content">
         <div class="main-grid">
             <div>
                 <div class="panel">
                     <h2>Add to Master Bill Blueprint</h2>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-top: -15px; margin-bottom: 20px;">Pick the next due date. The app will extract the day and plot it every month.</p>
                     <form id="master-bill-form">
                         <div class="form-group"><label>Bill Name (e.g., Mortgage)</label><input type="text" id="mb-name" required></div>
                         <div class="flex-row">
                             <div class="form-group"><label>Expected Amount ($)</label><input type="number" id="mb-amount" step="0.01" min="0" required></div>
-                            <div class="form-group"><label>Day of Month (1-31)</label><input type="number" id="mb-day" min="1" max="31" required></div>
+                            <div class="form-group"><label>Next Due Date</label><input type="date" id="mb-date" required></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Add to Blueprint</button>
                     </form>
@@ -310,6 +313,7 @@
         </div>
     </div>
 
+    <!-- TAB 3: TRANSACTIONS & LOGGING -->
     <div id="tab-ledger" class="tab-content">
         <div class="main-grid">
             <div>
@@ -368,6 +372,7 @@
         </div>
     </div>
 
+    <!-- TAB 4: CREDIT CARDS -->
     <div id="tab-credit" class="tab-content">
         <div class="dash-top-row">
             <div class="kpi-card kpi-allocate"><h3>Line of Credit</h3><p id="cc-total-limit">$0.00</p></div>
@@ -398,6 +403,7 @@
         </div>
     </div>
 
+    <!-- TAB 5: WINDFALLS & EVENTS -->
     <div id="tab-events" class="tab-content">
         <div class="grid-2-col">
             <div>
@@ -427,8 +433,8 @@
 </div>
 
 <footer class="app-footer">
-    Elite Cloud Finance Tracker • <strong>Version 2.6.1</strong><br>
-    Generated: April 5, 2026
+    Elite Cloud Finance Tracker • <strong>Version 2.7</strong><br>
+    Generated: April 6, 2026
 </footer>
 
 <script type="module">
@@ -521,15 +527,29 @@
     async function saveDataToCloud() { if (currentUser) await setDoc(doc(db, "users", currentUser.uid), data); }
     function updateUI(save = true) { if(save) saveDataToCloud(); renderCategories(); renderLedger(); updateDashboard(); renderCreditCards(); renderEventsTab(); renderMasterBills(); }
 
-    // --- MASTER BILLS ---
+    // --- MASTER BILLS (V2.7 UPDATED FOR CALENDAR PICKER) ---
     const mbForm = document.getElementById('master-bill-form');
     if(mbForm) {
         mbForm.addEventListener('submit', function(e) { 
             e.preventDefault(); 
-            data.bills.push({ id: Date.now().toString(), name: document.getElementById('mb-name').value, amount: parseFloat(document.getElementById('mb-amount').value), dueDate: parseInt(document.getElementById('mb-day').value) }); 
+            const name = document.getElementById('mb-name').value;
+            const amount = parseFloat(document.getElementById('mb-amount').value);
+            const dateStr = document.getElementById('mb-date').value;
+            
+            // Extract the exact day of the month from the selected calendar date
+            // Using split prevents timezone shifting issues that happen with new Date()
+            const day = parseInt(dateStr.split('-')[2]);
+            
+            data.bills.push({ 
+                id: Date.now().toString(), 
+                name: name, 
+                amount: amount, 
+                dueDate: day 
+            }); 
             this.reset(); updateUI(); showToast('✅ Bill added to Blueprint!'); 
         });
     }
+    
     window.delMasterBill = function(id) { data.bills = data.bills.filter(b => b.id !== id); updateUI(); showToast('🗑️ Bill removed', true); }
     
     function renderMasterBills() {
@@ -642,7 +662,7 @@
     
     window.deleteEntry = function(id) { data.entries = data.entries.filter(x => x.id !== id.toString()); updateUI(); showToast('🗑️ Entry Deleted', true); };
 
-    // --- RE-INJECTED LEDGER FUNCTIONS (FIXES THE CRASH) ---
+    // --- RE-INJECTED LEDGER FUNCTIONS ---
     function getFilteredEntries() {
         const mEl = document.getElementById('filterMonth'); const yEl = document.getElementById('filterYear');
         if(!mEl || !yEl) return [];
@@ -734,26 +754,21 @@
             document.getElementById('tbl-exp-bud').innerText = `$${totalExpBud.toFixed(2)}`; document.getElementById('tbl-exp-act').innerText = `$${tExp.toFixed(2)}`;
         }
 
-        // FIX: Make sure Master Bills (Blueprint) show up on the summary regardless of actual transactions.
         const billBody = document.getElementById('tbl-bills-body'); 
         if(billBody) {
             billBody.innerHTML = ''; let totalBillBud = 0; let combinedBills = {};
             
-            // First load the expectations from the Master list
             if(data.bills) {
                 data.bills.forEach(b => { combinedBills[b.name] = { bud: b.amount, act: 0 }; });
             }
             
-            // Then mix in any actual payments made
             for (const [name, act] of Object.entries(billMap)) { 
                 if(!combinedBills[name]) combinedBills[name] = {bud:0, act:0}; 
                 combinedBills[name].act += act; 
             }
             
-            // Render it to the table
             for (const [name, vals] of Object.entries(combinedBills)) {
                 totalBillBud += vals.bud; 
-                // Color it red if paid > 0 to signify it left the account, or if it exceeded budget
                 billBody.innerHTML += `<tr><td>${name}</td><td class="num-col">$${vals.bud.toFixed(2)}</td><td class="num-col ${vals.act > 0 ? 'negative' : ''}">$${vals.act.toFixed(2)}</td></tr>`;
             }
             document.getElementById('tbl-bills-bud').innerText = `$${totalBillBud.toFixed(2)}`; 
