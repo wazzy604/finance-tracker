@@ -164,6 +164,7 @@
         </div>
     </header>
 
+    <!-- MAIN NAVIGATION TABS -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('tab-dashboard')">Dashboard</button>
         <button class="tab-btn" onclick="switchTab('tab-bills')">Bills & Calendar</button>
@@ -172,6 +173,7 @@
         <button class="tab-btn" onclick="switchTab('tab-events')">Windfalls & Events</button>
     </div>
 
+    <!-- TAB 1: DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
         <div class="dash-top-row">
             <div class="kpi-card kpi-networth"><h3>Total Net Worth</h3><p id="dash-networth">$0.00</p></div>
@@ -255,17 +257,18 @@
         </div>
     </div>
 
+    <!-- TAB 2: BILLS & CALENDAR -->
     <div id="tab-bills" class="tab-content">
         <div class="main-grid">
             <div>
                 <div class="panel">
                     <h2>Add to Master Bill Blueprint</h2>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-top: -15px; margin-bottom: 20px;">These will automatically populate onto your calendar every month as blue "Expected" reminders.</p>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-top: -15px; margin-bottom: 20px;">These automatically populate the calendar as blue reminders.</p>
                     <form id="master-bill-form">
-                        <div class="form-group"><label>Bill Name (e.g., Mortgage, Cell Phone)</label><input type="text" id="mb-name" required></div>
+                        <div class="form-group"><label>Bill Name (e.g., Mortgage)</label><input type="text" id="mb-name" required></div>
                         <div class="flex-row">
                             <div class="form-group"><label>Expected Amount ($)</label><input type="number" id="mb-amount" step="0.01" min="0" required></div>
-                            <div class="form-group"><label>Day of Month Due (1-31)</label><input type="number" id="mb-day" min="1" max="31" required></div>
+                            <div class="form-group"><label>Day of Month (1-31)</label><input type="number" id="mb-day" min="1" max="31" required></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Add to Blueprint</button>
                     </form>
@@ -289,7 +292,7 @@
             <div>
                 <div class="panel" style="height: 100%;">
                     <h2 style="margin-bottom:5px;">Universal Calendar</h2>
-                    <div style="display:flex; gap:10px; font-size:11px; margin-bottom:20px; color:var(--text-muted); font-weight:600;">
+                    <div style="display:flex; gap:10px; font-size:11px; margin-bottom:20px; color:var(--text-muted); font-weight:600; flex-wrap:wrap;">
                         <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px dashed var(--info);background:rgba(59,130,246,0.1)"></div> Expected</span>
                         <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--border);background:var(--bg-panel)"></div> Paid Exp.</span>
                         <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--warning);background:rgba(245,158,11,0.1)"></div> Unpaid</span>
@@ -301,11 +304,12 @@
         </div>
     </div>
 
+    <!-- TAB 3: TRANSACTIONS & LOGGING -->
     <div id="tab-ledger" class="tab-content">
         <div class="main-grid">
             <div>
                 <div class="panel">
-                    <h2 id="form-title">Log Transaction / Actual Payment</h2>
+                    <h2 id="form-title">Log Transaction / Payment</h2>
                     <form id="finance-form">
                         <input type="hidden" id="edit-id" value="">
                         <div class="form-group">
@@ -322,7 +326,6 @@
                         <div class="form-group hidden" id="paycheck-group"><label>Assign to Paycheck</label><select id="paycheck"><option value="none">None (Standard)</option><option value="p1">Paycheck 1 (1st - 14th)</option><option value="p2">Paycheck 2 (15th - End)</option></select></div>
                         <div class="form-group" id="subcategory-group"><label>Category / Savings Goal</label><select id="subcategory"></select></div>
                         
-                        <!-- THE MISSING TAG GROUP HAS RETURNED -->
                         <div class="form-group" id="tag-group">
                             <label>Necessity Tag</label>
                             <div class="radio-group">
@@ -360,6 +363,7 @@
         </div>
     </div>
 
+    <!-- TAB 4: CREDIT CARDS -->
     <div id="tab-credit" class="tab-content">
         <div class="dash-top-row">
             <div class="kpi-card kpi-allocate"><h3>Total Approved Limit</h3><p id="cc-total-limit">$0.00</p></div>
@@ -382,13 +386,14 @@
         </div>
     </div>
 
+    <!-- TAB 5: WINDFALLS & EVENTS -->
     <div id="tab-events" class="tab-content">
         <div class="grid-2-col">
             <div>
                 <div class="panel">
                     <h2 style="border-bottom-color: var(--secondary);">Log Windfall (Bonus / Tax Return)</h2>
                     <form id="windfall-form">
-                        <div class="form-group"><label>Windfall Name</label><input type="text" id="wf-name" placeholder="e.g., 2026 Bonus, Tax Return" required></div>
+                        <div class="form-group"><label>Windfall Name</label><input type="text" id="wf-name" placeholder="e.g., 2026 Bonus" required></div>
                         <div class="form-group"><label>Total Amount Received ($)</label><input type="number" id="wf-amount" step="0.01" min="1" required></div>
                         <button type="submit" class="btn btn-secondary">Create Windfall Tracker</button>
                     </form>
@@ -396,7 +401,7 @@
                 <div class="panel">
                     <h2 style="border-bottom-color: var(--warning);">Log Big Purchase / Trip</h2>
                     <form id="purchase-form">
-                        <div class="form-group"><label>Purchase / Trip Name</label><input type="text" id="bp-name" placeholder="e.g., Japan Trip, New Couch" required></div>
+                        <div class="form-group"><label>Purchase / Trip Name</label><input type="text" id="bp-name" placeholder="e.g., Japan Trip" required></div>
                         <div class="form-group"><label>Estimated Budget ($)</label><input type="number" id="bp-budget" step="1" min="1" required></div>
                         <button type="submit" class="btn btn-warning" style="color: white;">Create Purchase Tracker</button>
                     </form>
@@ -411,12 +416,421 @@
 </div>
 
 <footer class="app-footer">
-    Elite Cloud Finance Tracker • <strong>Version 2.5.1</strong><br>
-    Generated: April 5, 2026, 7:55 PM EDT
+    Elite Cloud Finance Tracker • <strong>Version 2.5.2</strong><br>
+    Generated: April 5, 2026
 </footer>
 
 <script type="module">
     Chart.defaults.color = '#94A3B8'; Chart.defaults.borderColor = '#2A3B54'; Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    
+    // --- EXTERNAL CONFIG ---
+    import { firebaseConfig } from './firebase-config.js';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let data = { entries: [], budgets: {}, debts: {}, creditCards: {}, windfalls: [], bigPurchases: [], categories: [], bills: [], assets: 0 };
+    let doughnutChartInst; let currentSort = { column: 'date', dir: 'desc' };
+
+    const authScreen = document.getElementById('auth-screen'); 
+    const appScreen = document.getElementById('app-screen'); 
+    const errorDiv = document.getElementById('auth-error');
+
+    window.showToast = function(msg, isError = false) {
+        const toast = document.getElementById('toast'); 
+        if(!toast) return;
+        toast.innerText = msg; toast.style.background = isError ? 'var(--danger)' : 'var(--secondary)';
+        toast.classList.remove('hidden'); void toast.offsetWidth; toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.classList.add('hidden'), 300); }, 3000);
+    }
+
+    window.switchTab = function(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if(target) target.classList.add('active'); 
+        if(event && event.currentTarget) event.currentTarget.classList.add('active');
+        if(tabId === 'tab-bills') renderBillCalendar();
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user; 
+            const emailDisp = document.getElementById('user-email-display');
+            if(emailDisp) emailDisp.innerText = `Logged in: ${user.email}`;
+            if(authScreen) authScreen.classList.add('hidden'); 
+            if(appScreen) appScreen.classList.remove('hidden');
+            await loadDataFromCloud(); 
+            populateFilters(); 
+            const dInput = document.getElementById('date');
+            if(dInput) dInput.valueAsDate = new Date(); 
+            toggleFormFields(); 
+            updateUI(false); 
+        } else {
+            currentUser = null; 
+            if(authScreen) authScreen.classList.remove('hidden'); 
+            if(appScreen) appScreen.classList.add('hidden');
+        }
+    });
+
+    const btnLogin = document.getElementById('btn-login');
+    if(btnLogin) {
+        btnLogin.addEventListener('click', () => { 
+            signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value).catch(err => { if(errorDiv) errorDiv.innerText = err.message; }); 
+        });
+    }
+
+    const btnRegister = document.getElementById('btn-register');
+    if(btnRegister) {
+        btnRegister.addEventListener('click', () => { 
+            createUserWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-password').value).catch(err => { if(errorDiv) errorDiv.innerText = err.message; }); 
+        });
+    }
+
+    const btnLogout = document.getElementById('btn-logout');
+    if(btnLogout) {
+        btnLogout.addEventListener('click', () => signOut(auth));
+    }
+    
+    async function loadDataFromCloud() {
+        if (!currentUser) return;
+        const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+        if (docSnap.exists()) {
+            data = docSnap.data();
+            if(!data.entries) data.entries = []; if(!data.budgets) data.budgets = {}; if(!data.debts) data.debts = {}; if(!data.creditCards) data.creditCards = {};
+            if(!data.windfalls) data.windfalls = []; if(!data.bigPurchases) data.bigPurchases = []; if(!data.bills) data.bills = [];
+            if(!data.categories || data.categories.length === 0) { data.categories = ['Groceries', 'Restaurants', 'Shopping', 'Gas', 'Family Outing', 'Wife Outing', 'Husband Outing', 'Utilities', 'Housing']; }
+            const assInp = document.getElementById('asset-input');
+            if(assInp) assInp.value = data.assets || '';
+        } else { 
+            data.categories = ['Groceries', 'Restaurants', 'Shopping', 'Gas', 'Family Outing', 'Wife Outing', 'Husband Outing', 'Utilities', 'Housing'];
+            await setDoc(doc(db, "users", currentUser.uid), data); 
+        }
+    }
+
+    async function saveDataToCloud() { if (currentUser) await setDoc(doc(db, "users", currentUser.uid), data); }
+    function updateUI(save = true) { if(save) saveDataToCloud(); renderCategories(); renderLedger(); updateDashboard(); renderCreditCards(); renderEventsTab(); renderMasterBills(); }
+
+    // --- MASTER BILLS ---
+    const mbForm = document.getElementById('master-bill-form');
+    if(mbForm) {
+        mbForm.addEventListener('submit', function(e) { 
+            e.preventDefault(); 
+            data.bills.push({ id: Date.now().toString(), name: document.getElementById('mb-name').value, amount: parseFloat(document.getElementById('mb-amount').value), dueDate: parseInt(document.getElementById('mb-day').value) }); 
+            this.reset(); updateUI(); showToast('✅ Bill added to Blueprint!'); 
+        });
+    }
+    window.delMasterBill = function(id) { data.bills = data.bills.filter(b => b.id !== id); updateUI(); showToast('🗑️ Bill removed', true); }
+    
+    function renderMasterBills() {
+        const tbody = document.getElementById('master-bills-body'); 
+        if(!tbody) return;
+        tbody.innerHTML = ''; let total = 0; let sorted = [...data.bills].sort((a,b) => a.dueDate - b.dueDate);
+        sorted.forEach(b => { total += b.amount; tbody.innerHTML += `<tr><td><span style="background:var(--bg-panel); padding:4px 8px; border-radius:4px; border:1px solid var(--border); font-size:11px;">Day ${b.dueDate}</span></td><td style="font-weight:600;">${b.name}</td><td>$${b.amount.toFixed(2)}</td><td><button class="btn btn-sm btn-danger" style="background:transparent; color:var(--danger); padding:0;" onclick="window.delMasterBill('${b.id}')">✖</button></td></tr>`; });
+        
+        const bc = document.getElementById('bill-count'); if(bc) bc.innerText = `${data.bills.length} Total Bills`; 
+        const bt = document.getElementById('bill-total'); if(bt) bt.innerText = `$${total.toFixed(2)}/mo`; 
+        renderBillCalendar();
+    }
+
+    function renderBillCalendar() {
+        const calCont = document.getElementById('calendar-container');
+        if(!calCont) return;
+        const now = new Date(); const year = parseInt(document.getElementById('filterYear').value) || now.getFullYear(); const month = parseInt(document.getElementById('filterMonth').value) - 1 || now.getMonth();
+        const firstDayIndex = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const actualEntries = data.entries.filter(e => { const [eYear, eMonth] = e.date.split('-'); return parseInt(eYear) === year && parseInt(eMonth) === (month + 1); });
+        let calHtml = `<div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:10px;"><div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div></div><div class="calendar-grid">`;
+        for(let i = 0; i < firstDayIndex; i++) { calHtml += `<div class="cal-day" style="opacity:0.2; background:transparent;"></div>`; }
+        for(let i = 1; i <= daysInMonth; i++) {
+            let isToday = (i === now.getDate() && month === now.getMonth() && year === now.getFullYear()); let dayNumStyle = isToday ? `background:var(--primary); color:white; padding:2px 6px; border-radius:4px; display:inline-block;` : ``;
+            let masterBills = data.bills.filter(b => b.dueDate === i); let pillsHtml = masterBills.map(b => `<div class="bill-pill pill-master" title="Recurring Blueprint: ${b.name}">🔄 $${b.amount.toFixed(0)} - ${b.name}</div>`).join('');
+            let dayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`; let loggedToday = actualEntries.filter(e => e.date === dayStr);
+            loggedToday.forEach(e => { let icon = e.type === 'income' ? '💵' : (e.status === 'unpaid' ? '⏳' : '✅'); let cssClass = e.status === 'unpaid' ? 'pill-unpaid' : (e.type === 'income' ? 'pill-income' : 'pill-paid'); pillsHtml += `<div class="bill-pill ${cssClass}" title="${e.name}">${icon} $${parseFloat(e.amount).toFixed(0)} - ${e.name}</div>`; });
+            calHtml += `<div class="cal-day"><div class="cal-day-num"><span style="${dayNumStyle}">${i}</span></div>${pillsHtml}</div>`;
+        }
+        calHtml += `</div>`; calCont.innerHTML = calHtml;
+    }
+
+    // --- CATEGORIES & FORMS ---
+    function renderCategories() {
+        const subCatSelect = document.getElementById('subcategory'); const budCatSelect = document.getElementById('budget-cat'); const listCont = document.getElementById('category-list');
+        if(!subCatSelect || !budCatSelect || !listCont) return;
+        const currentSubVal = subCatSelect.value; const currentBudVal = budCatSelect.value;
+        subCatSelect.innerHTML = ''; budCatSelect.innerHTML = ''; listCont.innerHTML = '';
+        data.categories.forEach(cat => { subCatSelect.add(new Option(cat, cat)); budCatSelect.add(new Option(cat, cat)); listCont.innerHTML += `<div class="tag" style="display:inline-block; margin:2px; background:rgba(255,255,255,0.05); border: 1px solid var(--border); font-size:11px; padding:6px 12px;">${cat} <span style="cursor:pointer; color:var(--danger); margin-left:8px;" onclick="window.delCategory('${cat}')">✖</span></div>`; });
+        if(data.categories.includes(currentSubVal)) subCatSelect.value = currentSubVal; if(data.categories.includes(currentBudVal)) budCatSelect.value = currentBudVal;
+    }
+    
+    window.addCategory = function() { 
+        const cInp = document.getElementById('new-cat-input');
+        if(!cInp) return;
+        const val = cInp.value.trim(); 
+        if(val && !data.categories.includes(val)) { data.categories.push(val); cInp.value = ''; updateUI(); showToast(`✅ Added Category: ${val}`); } 
+    }
+    
+    window.delCategory = function(cat) { data.categories = data.categories.filter(c => c !== cat); updateUI(); showToast(`🗑️ Deleted Category: ${cat}`, true); }
+
+    function toggleFormFields() {
+        const typeEl = document.getElementById('type');
+        if(!typeEl) return;
+        const type = typeEl.value; 
+        const subCatGroup = document.getElementById('subcategory-group'); 
+        const tagGroup = document.getElementById('tag-group'); 
+        const statusGroup = document.getElementById('status-group'); 
+        const paycheckGroup = document.getElementById('paycheck-group');
+        
+        if(!subCatGroup || !tagGroup || !statusGroup || !paycheckGroup) return;
+
+        if (type === 'bill' || type === 'debt_payment') { statusGroup.classList.remove('hidden'); paycheckGroup.classList.remove('hidden'); } else { statusGroup.classList.add('hidden'); paycheckGroup.classList.add('hidden'); document.getElementById('status').value = 'paid'; document.getElementById('paycheck').value = 'none'; }
+        if (type === 'expense' || type === 'savings') { subCatGroup.classList.remove('hidden'); tagGroup.classList.remove('hidden'); } else if (type === 'bill') { subCatGroup.classList.remove('hidden'); tagGroup.classList.add('hidden'); } else { subCatGroup.classList.add('hidden'); tagGroup.classList.add('hidden'); }
+    }
+    
+    const typeDrop = document.getElementById('type');
+    if(typeDrop) typeDrop.addEventListener('change', toggleFormFields);
+
+    const fForm = document.getElementById('finance-form');
+    if(fForm) {
+        fForm.addEventListener('submit', function(e) {
+            e.preventDefault(); const type = document.getElementById('type').value; const baseAmount = parseFloat(document.getElementById('amount').value);
+            const splitCb = document.getElementById('split-bill');
+            const isSplit = splitCb ? splitCb.checked && (type === 'bill' || type === 'debt_payment') : false; 
+            const isEditing = document.getElementById('edit-id').value !== '';
+            
+            const tagRadio = document.querySelector('input[name="tag"]:checked');
+            const tagVal = tagRadio ? tagRadio.value : '';
+
+            const createEntry = (amt, payCheckAssign, postfix) => { return { id: document.getElementById('edit-id').value || (Date.now() + postfix).toString(), type: type, name: document.getElementById('name').value + (isSplit ? ` (Half-Payment ${postfix})` : ''), amount: amt, date: document.getElementById('date').value, subCat: (type === 'expense' || type === 'bill' || type === 'savings') ? document.getElementById('subcategory').value : '', tag: type === 'expense' ? tagVal : '', status: (type === 'bill' || type === 'debt_payment') ? document.getElementById('status').value : 'paid', paycheck: payCheckAssign }; };
+            
+            if(isSplit && !isEditing) { data.entries.push(createEntry(baseAmount / 2, 'p1', 1)); data.entries.push(createEntry(baseAmount / 2, 'p2', 2)); } else { const entry = createEntry(baseAmount, document.getElementById('paycheck').value, 0); const existingIdx = data.entries.findIndex(x => x.id === entry.id); if (existingIdx >= 0) { data.entries[existingIdx] = entry; cancelEdit(); } else { data.entries.push(entry); } }
+            this.reset(); if(splitCb) splitCb.checked = false; document.getElementById('date').valueAsDate = new Date(); toggleFormFields(); updateUI(); showToast(isEditing ? '✅ Transaction Updated!' : '✅ Transaction Saved!');
+        });
+    }
+
+    window.editEntry = function(id) {
+        const entry = data.entries.find(x => x.id === id.toString()); if (!entry) return;
+        document.getElementById('edit-id').value = entry.id; document.getElementById('type').value = entry.type; toggleFormFields();
+        document.getElementById('name').value = entry.name.replace(' (Half-Payment 1)', '').replace(' (Half-Payment 2)', ''); document.getElementById('amount').value = entry.amount; document.getElementById('date').value = entry.date;
+        if(entry.status) document.getElementById('status').value = entry.status; if(entry.paycheck) document.getElementById('paycheck').value = entry.paycheck;
+        if (entry.subCat) { if(!data.categories.includes(entry.subCat)) { document.getElementById('subcategory').add(new Option(entry.subCat, entry.subCat)); } document.getElementById('subcategory').value = entry.subCat; }
+        if (entry.tag) { const tr = document.querySelector(`input[name="tag"][value="${entry.tag}"]`); if(tr) tr.checked = true; }
+        
+        const sb = document.getElementById('split-bill'); if(sb) sb.disabled = true; 
+        document.getElementById('form-title').innerText = "Edit Transaction"; document.getElementById('submit-btn').innerText = "Update"; document.getElementById('cancel-edit-btn').classList.remove('hidden'); window.scrollTo(0,0);
+    };
+    
+    window.markAsPaid = function(id) { const entry = data.entries.find(x => x.id === id.toString()); if(entry) { entry.status = 'paid'; updateUI(); showToast('✅ Marked as Paid!'); } }
+    
+    function cancelEdit() { 
+        const f = document.getElementById('finance-form'); if(f) f.reset(); 
+        document.getElementById('edit-id').value = ''; 
+        const sb = document.getElementById('split-bill'); if(sb) sb.disabled = false; 
+        document.getElementById('form-title').innerText = "Log Transaction / Payment"; document.getElementById('submit-btn').innerText = "Add Entry"; document.getElementById('cancel-edit-btn').classList.add('hidden'); document.getElementById('date').valueAsDate = new Date(); toggleFormFields(); 
+    }
+    
+    const cxBtn = document.getElementById('cancel-edit-btn');
+    if(cxBtn) cxBtn.addEventListener('click', cancelEdit);
+    
+    window.deleteEntry = function(id) { data.entries = data.entries.filter(x => x.id !== id.toString()); updateUI(); showToast('🗑️ Entry Deleted', true); };
+
+    // --- V2.5 DASHBOARD ENGINE ---
+    function updateDashboard() {
+        const mSel = document.getElementById('filterMonth'); const ySel = document.getElementById('filterYear');
+        if(!mSel || !ySel) return;
+        const monthSelect = mSel.value; const yearSelect = ySel.value;
+        
+        let currentFiltered = data.entries.filter(e => {
+            const [eYear, eMonth] = e.date.split('-');
+            return (monthSelect === 'ALL' || eMonth === monthSelect) && (yearSelect === 'ALL' || eYear === yearSelect);
+        });
+
+        let rollover = 0;
+        if (monthSelect !== 'ALL' && yearSelect !== 'ALL') {
+            const currentPeriod = parseInt(yearSelect) * 12 + parseInt(monthSelect);
+            data.entries.forEach(e => {
+                if(e.status === 'unpaid') return;
+                const [eY, eM] = e.date.split('-');
+                const ePeriod = parseInt(eY) * 12 + parseInt(eM);
+                if (ePeriod < currentPeriod) {
+                    if (e.type === 'income') rollover += parseFloat(e.amount);
+                    else rollover -= parseFloat(e.amount); 
+                }
+            });
+        }
+
+        let tInc = 0, tExp = 0, tBill = 0, tDebt = 0, tSav = 0;
+        let incMap = {}, expMap = {}, billMap = {}, debtMap = {}, savMap = {};
+
+        currentFiltered.forEach(e => {
+            const amt = parseFloat(e.amount);
+            if (e.type === 'income') { tInc += amt; incMap[e.paycheck || 'none'] = (incMap[e.paycheck || 'none'] || 0) + amt; }
+            if (e.status === 'paid') {
+                if (e.type === 'expense') { tExp += amt; let cat = e.subCat || 'Other'; expMap[cat] = (expMap[cat] || 0) + amt; }
+                if (e.type === 'bill') { tBill += amt; billMap[e.name] = (billMap[e.name] || 0) + amt; }
+                if (e.type === 'debt_payment') { tDebt += amt; debtMap[e.name] = (debtMap[e.name] || 0) + amt; }
+                if (e.type === 'savings') { tSav += amt; let cat = e.subCat || 'General'; savMap[cat] = (savMap[cat] || 0) + amt; }
+            }
+        });
+
+        const incBody = document.getElementById('tbl-income-body'); 
+        if(incBody) {
+            incBody.innerHTML = '';
+            for (const [pk, val] of Object.entries(incMap)) { incBody.innerHTML += `<tr><td>${pk==='p1'?'Paycheck 1':pk==='p2'?'Paycheck 2':'Other Income'}</td><td class="num-col">$${val.toFixed(2)}</td></tr>`; }
+            document.getElementById('tbl-income-total').innerText = `$${tInc.toFixed(2)}`;
+        }
+
+        const expBody = document.getElementById('tbl-exp-body'); 
+        if(expBody) {
+            expBody.innerHTML = ''; let totalExpBud = 0;
+            for (const cat of Object.keys({...data.budgets, ...expMap})) {
+                let bud = data.budgets[cat] || 0; let act = expMap[cat] || 0; totalExpBud += bud;
+                if(bud > 0 || act > 0) expBody.innerHTML += `<tr><td>${cat}</td><td class="num-col">$${bud.toFixed(2)}</td><td class="num-col ${act>bud?'negative':''} ">$${act.toFixed(2)}</td></tr>`;
+            }
+            document.getElementById('tbl-exp-bud').innerText = `$${totalExpBud.toFixed(2)}`; document.getElementById('tbl-exp-act').innerText = `$${tExp.toFixed(2)}`;
+        }
+
+        const billBody = document.getElementById('tbl-bills-body'); 
+        if(billBody) {
+            billBody.innerHTML = ''; let totalBillBud = 0; let combinedBills = {};
+            data.bills.forEach(b => { combinedBills[b.name] = { bud: b.amount, act: 0 }; });
+            for (const [name, act] of Object.entries(billMap)) { if(!combinedBills[name]) combinedBills[name] = {bud:0, act:0}; combinedBills[name].act += act; }
+            for (const [name, vals] of Object.entries(combinedBills)) {
+                totalBillBud += vals.bud; billBody.innerHTML += `<tr><td>${name}</td><td class="num-col">$${vals.bud.toFixed(2)}</td><td class="num-col">$${vals.act.toFixed(2)}</td></tr>`;
+            }
+            document.getElementById('tbl-bills-bud').innerText = `$${totalBillBud.toFixed(2)}`; document.getElementById('tbl-bills-act').innerText = `$${tBill.toFixed(2)}`;
+        }
+
+        const debtBody = document.getElementById('tbl-debt-body'); 
+        if(debtBody) {
+            debtBody.innerHTML = ''; let totalDebtBud = 0;
+            for (const [name, info] of Object.entries(data.debts)) {
+                let bud = info.min || 0; let act = debtMap[name] || 0; totalDebtBud += bud;
+                debtBody.innerHTML += `<tr><td>${name}</td><td class="num-col">$${bud.toFixed(2)}</td><td class="num-col">$${act.toFixed(2)}</td></tr>`;
+                delete debtMap[name]; 
+            }
+            for (const [name, act] of Object.entries(debtMap)) { debtBody.innerHTML += `<tr><td>${name}</td><td class="num-col">-</td><td class="num-col">$${act.toFixed(2)}</td></tr>`; }
+            document.getElementById('tbl-debt-bud').innerText = `$${totalDebtBud.toFixed(2)}`; document.getElementById('tbl-debt-act').innerText = `$${tDebt.toFixed(2)}`;
+        }
+
+        const savBody = document.getElementById('tbl-savings-body'); 
+        if(savBody) {
+            savBody.innerHTML = '';
+            for (const [cat, act] of Object.entries(savMap)) { let bud = data.budgets[cat] || 0; savBody.innerHTML += `<tr><td>${cat}</td><td class="num-col">$${bud.toFixed(2)}</td><td class="num-col positive">$${act.toFixed(2)}</td></tr>`; }
+            document.getElementById('tbl-savings-act').innerText = `$${tSav.toFixed(2)}`;
+        }
+
+        let totalLeft = tInc + rollover - tBill - tExp - tDebt - tSav;
+        const cfInc = document.getElementById('cf-inc'); if(cfInc) {
+            cfInc.innerText = `$${tInc.toFixed(2)}`; document.getElementById('cf-roll').innerText = `$${rollover.toFixed(2)}`; document.getElementById('cf-bills').innerText = `$${tBill.toFixed(2)}`; document.getElementById('cf-exp').innerText = `$${tExp.toFixed(2)}`; document.getElementById('cf-debt').innerText = `$${tDebt.toFixed(2)}`; document.getElementById('cf-sav').innerText = `$${tSav.toFixed(2)}`; document.getElementById('cf-total').innerText = `$${totalLeft.toFixed(2)}`; document.getElementById('cf-total').className = totalLeft >= 0 ? "num-col positive" : "num-col negative";
+            document.getElementById('dash-income').innerText = `$${tInc.toFixed(2)}`; document.getElementById('dash-expense').innerText = `$${(tExp+tBill+tDebt+tSav).toFixed(2)}`; document.getElementById('dash-allocate').innerText = `$${totalLeft.toFixed(2)}`;
+        }
+
+        let totalFixedStarting = Object.entries(data.debts).reduce((acc, [k, v]) => acc + (parseFloat(v.bal || 0)), 0); let allTimeFixedPaid = data.entries.filter(e => e.type === 'debt_payment' && e.status === 'paid').reduce((a, b) => a + parseFloat(b.amount), 0); let currentCCDebt = Object.values(data.creditCards || {}).reduce((acc, cc) => acc + parseFloat(cc.balance || 0), 0); let netWorth = parseFloat(data.assets || 0) - (Math.max(totalFixedStarting - allTimeFixedPaid, 0) + currentCCDebt);
+        const nwEl = document.getElementById('dash-networth'); if(nwEl) nwEl.innerText = `$${netWorth.toFixed(2)}`;
+
+        updateDoughnutChart({'Expenses': tExp, 'Bills': tBill, 'Debt': tDebt, 'Savings': tSav});
+    }
+
+    function updateDoughnutChart(totalsObj) {
+        const ctxEl = document.getElementById('doughnutChart');
+        if(!ctxEl) return;
+        const ctx = ctxEl.getContext('2d'); if (doughnutChartInst) doughnutChartInst.destroy();
+        let labels = Object.keys(totalsObj); let vals = Object.values(totalsObj); let colors = ['#F43F5E', '#F59E0B', '#8B5CF6', '#10B981']; 
+        if(vals.reduce((a,b)=>a+b,0) === 0) { labels = ['No Data']; vals = [1]; colors = ['#1E293B']; }
+        doughnutChartInst = new Chart(ctx, { type: 'doughnut', data: { labels: labels, datasets: [{ data: vals, backgroundColor: colors, borderWidth: 2, borderColor: '#172033' }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { color: '#94A3B8', boxWidth: 12, padding: 15, font: {size: 11} } } } } });
+    }
+
+    function sortData(c) { if(currentSort.column===c) currentSort.dir=currentSort.dir==='asc'?'desc':'asc'; else {currentSort.column=c;currentSort.dir='asc';} updateUI(false); }
+    const sDate = document.getElementById('sort-date'); if(sDate) sDate.addEventListener('click',()=>sortData('date')); 
+    const sName = document.getElementById('sort-name'); if(sName) sName.addEventListener('click',()=>sortData('name')); 
+    const sAmt = document.getElementById('sort-amount'); if(sAmt) sAmt.addEventListener('click',()=>sortData('amount'));
+
+    function populateFilters() {
+        const mSel = document.getElementById('filterMonth'); const ySel = document.getElementById('filterYear'); if(!mSel || !ySel) return; if(mSel.options.length>0) return;
+        const ms = ["All Months","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; ms.forEach((m,i)=>mSel.add(new Option(m,i===0?'ALL':i.toString().padStart(2,'0'))));
+        let cy = new Date().getFullYear(); ySel.add(new Option("All Years",'ALL')); for(let i=cy-2;i<=cy+2;i++) ySel.add(new Option(i,i));
+        mSel.value = (new Date().getMonth()+1).toString().padStart(2,'0'); ySel.value = cy.toString();
+        mSel.addEventListener('change', ()=>{updateUI(false);}); ySel.addEventListener('change', ()=>{updateUI(false);});
+    }
+
+    // CCs and Events
+    const btnAss = document.getElementById('btn-save-assets'); if(btnAss) btnAss.addEventListener('click', () => { data.assets = parseFloat(document.getElementById('asset-input').value) || 0; updateUI(); showToast('✅ Assets Updated!'); });
+    const btnBud = document.getElementById('btn-set-budget'); if(btnBud) btnBud.addEventListener('click', () => { const cat = document.getElementById('budget-cat').value; const amt = parseFloat(document.getElementById('budget-amt').value); if(!amt) return; data.budgets[cat] = amt; document.getElementById('budget-amt').value = ''; updateUI(); showToast(`✅ Budget set for ${cat}`); });
+    const btnDebt = document.getElementById('btn-set-debt'); if(btnDebt) btnDebt.addEventListener('click', () => { const name = document.getElementById('debt-name').value; const bal = parseFloat(document.getElementById('debt-bal').value); if(!name || !bal) return; data.debts[name] = { bal: bal, min: 0, rate: 0 }; document.getElementById('debt-name').value = ''; document.getElementById('debt-bal').value = ''; updateUI(); showToast('✅ Debt Profile Created'); });
+
+    const ccForm = document.getElementById('cc-form'); if(ccForm) { ccForm.addEventListener('submit', function(e) { e.preventDefault(); const name = document.getElementById('cc-name').value; if(!data.creditCards) data.creditCards = {}; data.creditCards[name] = { limit: parseFloat(document.getElementById('cc-limit').value), balance: parseFloat(document.getElementById('cc-balance').value), apr: parseFloat(document.getElementById('cc-apr').value) }; this.reset(); updateUI(); showToast('✅ Credit Card Saved!'); }); }
+    window.deleteCC = function(name) { delete data.creditCards[name]; updateUI(); showToast('🗑️ Card Deleted', true); }
+    window.editCC = function(name) { const cc = data.creditCards[name]; if(!cc) return; document.getElementById('cc-name').value = name; document.getElementById('cc-limit').value = cc.limit; document.getElementById('cc-balance').value = cc.balance; document.getElementById('cc-apr').value = cc.apr; window.scrollTo(0,0); }
+
+    function renderCreditCards() {
+        const cont = document.getElementById('cc-list-container'); if(!cont) return; cont.innerHTML = '';
+        if(!data.creditCards || Object.keys(data.creditCards).length === 0) { cont.innerHTML = '<i style="color:var(--text-muted)">No credit cards added.</i>'; document.getElementById('cc-total-limit').innerText = '$0.00'; document.getElementById('cc-total-bal').innerText = '$0.00'; document.getElementById('cc-total-util').innerText = '0%'; return; }
+        let totalLim = 0, totalBal = 0;
+        for(const [name, cc] of Object.entries(data.creditCards)) {
+            totalLim += cc.limit; totalBal += cc.balance; let utilPct = Math.min((cc.balance / cc.limit) * 100, 100); let fillClass = utilPct > 30 ? (utilPct > 70 ? 'fill-danger' : 'fill-warn') : 'fill-good';
+            cont.innerHTML += `<div class="progress-wrapper" style="padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px;"><div class="progress-header" style="font-size: 16px;"><strong>${name}</strong><div><button class="btn btn-sm btn-primary" onclick="window.editCC('${name}')">Edit</button> <button class="btn btn-sm btn-danger" style="background:transparent; color:var(--danger)" onclick="window.deleteCC('${name}')">✖</button></div></div><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"><span>Bal: <strong style="color:var(--text-main)">$${cc.balance.toFixed(2)}</strong></span><span>Lim:$${cc.limit.toFixed(2)}</span></div><div class="progress-bar" style="background: rgba(0,0,0,0.4);"><div class="progress-fill ${fillClass}" style="width: ${utilPct}%"></div></div></div>`;
+        }
+        let overallUtil = totalLim > 0 ? (totalBal / totalLim) * 100 : 0;
+        document.getElementById('cc-total-limit').innerText = `$${totalLim.toFixed(2)}`; document.getElementById('cc-total-bal').innerText = `$${totalBal.toFixed(2)}`; document.getElementById('cc-total-avail').innerText = `$${(totalLim - totalBal).toFixed(2)}`; document.getElementById('cc-total-util').innerText = `${overallUtil.toFixed(1)}%`; document.getElementById('cc-util-card').style.borderColor = overallUtil > 30 ? (overallUtil > 70 ? 'var(--danger)' : 'var(--warning)') : 'var(--secondary)';
+    }
+
+    const wfForm = document.getElementById('windfall-form'); if(wfForm) wfForm.addEventListener('submit', function(e) { e.preventDefault(); data.windfalls.push({ id: Date.now().toString(), name: document.getElementById('wf-name').value, amount: parseFloat(document.getElementById('wf-amount').value), allocations: [] }); this.reset(); updateUI(); showToast('✅ Windfall Tracked!'); });
+    const bpForm = document.getElementById('purchase-form'); if(bpForm) bpForm.addEventListener('submit', function(e) { e.preventDefault(); data.bigPurchases.push({ id: Date.now().toString(), name: document.getElementById('bp-name').value, budget: parseFloat(document.getElementById('bp-budget').value), expenses: [] }); this.reset(); updateUI(); showToast('✅ Purchase Goal Tracked!'); });
+    window.addWindfallAlloc = function(id) { const wf = data.windfalls.find(w => w.id === id); if(!wf) return; const desc = prompt("What did you spend this on?"); if(!desc) return; const amt = parseFloat(prompt("Amount allocated?")); if(!amt || amt <= 0) return; wf.allocations.push({ id: Date.now(), desc, amount: amt }); updateUI(); showToast('✅ Allocation added'); }
+    window.addPurchaseExp = function(id) { const bp = data.bigPurchases.find(p => p.id === id); if(!bp) return; const desc = prompt("What did you buy?"); if(!desc) return; const amt = parseFloat(prompt("Cost?")); if(!amt || amt <= 0) return; bp.expenses.push({ id: Date.now(), desc, amount: amt }); updateUI(); showToast('✅ Expense tracked'); }
+    window.delWindfall = function(id) { data.windfalls = data.windfalls.filter(w => w.id !== id); updateUI(); showToast('🗑️ Windfall Deleted', true); }
+    window.delPurchase = function(id) { data.bigPurchases = data.bigPurchases.filter(p => p.id !== id); updateUI(); showToast('🗑️ Goal Deleted', true); }
+    
+    function renderEventsTab() {
+        const wCont = document.getElementById('windfall-container'); if(!wCont) return; wCont.innerHTML = ''; if(data.windfalls.length === 0) wCont.innerHTML = '<i style="color:var(--text-muted)">No windfalls tracked yet.</i>';
+        data.windfalls.forEach(wf => { let allocated = wf.allocations.reduce((a, b) => a + b.amount, 0); let pct = Math.min((allocated / wf.amount) * 100, 100); let allocList = wf.allocations.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join(''); wCont.innerHTML += `<div class="event-card"><h3>${wf.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delWindfall('${wf.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Allocated: <strong style="color:var(--secondary)">$${allocated.toFixed(2)}</strong></span><span>Total:$${wf.amount.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill fill-good" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${allocList || '<i style="font-size:12px; color:var(--text-muted)">No money allocated yet.</i>'}</div><button class="btn btn-sm btn-secondary" style="background:transparent; border: 1px solid var(--secondary); color:var(--secondary); width:100%;" onclick="window.addWindfallAlloc('${wf.id}')">+ Add Allocation</button></div>`; });
+        const pCont = document.getElementById('purchase-container'); if(!pCont) return; pCont.innerHTML = ''; if(data.bigPurchases.length === 0) pCont.innerHTML = '<i style="color:var(--text-muted)">No big purchases tracked yet.</i>';
+        data.bigPurchases.forEach(bp => { let spent = bp.expenses.reduce((a, b) => a + b.amount, 0); let pct = Math.min((spent / bp.budget) * 100, 100); let colorCls = pct > 100 ? 'fill-danger' : (pct > 80 ? 'fill-warn' : 'fill-target'); let expList = bp.expenses.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join(''); pCont.innerHTML += `<div class="event-card" style="border-color: rgba(245, 158, 11, 0.3);"><h3>${bp.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delPurchase('${bp.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Spent: <strong style="color:${pct>100 ? 'var(--danger)' : 'var(--text-main)'}">$${spent.toFixed(2)}</strong></span><span>Budget:$${bp.budget.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill ${colorCls}" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${expList || '<i style="font-size:12px; color:var(--text-muted)">No expenses tracked yet.</i>'}</div><button class="btn btn-sm btn-warning" style="background:transparent; border: 1px solid var(--warning); color:var(--warning); width:100%;" onclick="window.addPurchaseExp('${bp.id}')">+ Log Expense</button></div>`; });
+    }
+
+    function renderLedger() {
+        const tbody = document.getElementById('ledger-body'); if(!tbody) return; tbody.innerHTML = '';
+        let filtered = getFilteredEntries();
+        filtered.sort((a, b) => {
+            let valA = a[currentSort.column]; let valB = b[currentSort.column];
+            if (currentSort.column === 'amount') { valA = parseFloat(valA); valB = parseFloat(valB); }
+            if (currentSort.column === 'date') { valA = new Date(valA); valB = new Date(valB); }
+            if (valA < valB) return currentSort.dir === 'asc' ? -1 : 1;
+            if (valA > valB) return currentSort.dir === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        filtered.forEach(e => {
+            const tr = document.createElement('tr');
+            let displayCat = e.subCat || '-';
+            if(e.status === 'unpaid') { displayCat += ` <span class="tag tag-unpaid">UNPAID</span>`; } 
+            let color = e.type === 'income' ? 'var(--secondary)' : (e.status === 'unpaid' ? 'var(--text-muted)' : 'var(--text-main)');
+            tr.innerHTML = `<td>${e.date}</td><td style="font-weight:600">${e.name}</td><td>${displayCat}</td><td style="color:${color}; font-weight:700;">$${parseFloat(e.amount).toFixed(2)}</td>
+                <td><button class="btn btn-sm btn-secondary" style="background:var(--bg-input); border:1px solid var(--border);" onclick="window.editEntry('${e.id}')">Edit</button>
+                <button class="btn btn-sm btn-danger" style="background:transparent; color:var(--danger);" onclick="window.deleteEntry('${e.id}')">✖</button></td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function getFilteredEntries() {
+        const mEl = document.getElementById('filterMonth'); const yEl = document.getElementById('filterYear');
+        if(!mEl || !yEl) return [];
+        const month = mEl.value; const year = yEl.value;
+        return data.entries.filter(e => {
+            const [eYear, eMonth] = e.date.split('-');
+            const matchM = month === 'ALL' || eMonth === month; const matchY = year === 'ALL' || eYear === year;
+            return matchM && matchY;
+        });
+    }
+
+    window.generatePDF = function() { showToast('📄 PDF Generation triggered...'); }
+    const expBtn = document.getElementById('btn-export'); if(expBtn) expBtn.addEventListener('click', () => { showToast('Exporting...'); });
+    const impBtn = document.getElementById('btn-import'); if(impBtn) impBtn.addEventListener('click', () => document.getElementById('csvFileInput').click());
+</script>
+</body>
+</html>
