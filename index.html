@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elite Cloud Finance Tracker</title>
+    <title>Aamir's Finance Tracker</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -121,14 +121,34 @@
 
         /* CALENDAR CSS */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        .cal-day { background: var(--bg-input); border: 1px solid var(--border); min-height: 100px; padding: 6px; border-radius: 8px; display: flex; flex-direction: column;}
+        .cal-day { 
+            background: var(--bg-input); border: 1px solid var(--border); 
+            height: 120px; /* Locked height so grid never stretches */
+            padding: 6px; border-radius: 8px; display: flex; flex-direction: column;
+            overflow-y: auto; /* Adds scrollbar only inside days that overflow */
+        }
+        /* Custom scrollbar for calendar days to keep it clean */
+        .cal-day::-webkit-scrollbar { width: 4px; }
+        .cal-day::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
         .cal-day-num { font-size: 12px; color: var(--text-muted); font-weight: 800; margin-bottom: 8px; text-align: right;}
         .cal-header { text-align: center; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 800; padding-bottom: 10px;}
-        .bill-pill { font-size: 10.5px; padding: 4px 6px; border-radius: 4px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; cursor: default;}
-        .pill-master { border: 1px dashed var(--info); color: var(--info); background: rgba(59, 130, 246, 0.1); }
+        
+        .bill-pill { 
+            font-size: 10.5px; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; 
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .bill-pill:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        
+        /* Expected Bills - VIBRANT SOLID BLUE */
+        .pill-master { border: 1px solid #0EA5E9; color: #FFFFFF; background: #0284C7; }
+        /* Paid Bills */
         .pill-paid { border: 1px solid var(--border); color: var(--text-muted); background: var(--bg-panel); }
-        .pill-unpaid { border: 1px solid var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.1); }
-        .pill-income { border: 1px solid var(--secondary); color: var(--secondary); background: rgba(16, 185, 129, 0.1); }
+        /* Unpaid Actuals */
+        .pill-unpaid { border: 1px solid var(--warning); color: #fff; background: #D97706; }
+        /* Income */
+        .pill-income { border: 1px solid var(--secondary); color: #fff; background: #059669; }
 
         /* VIBRANT CREDIT CARD CSS */
         .cc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
@@ -152,6 +172,25 @@
 
 <div id="toast" class="hidden">✅ Action Successful</div>
 
+<!-- CALENDAR QUICK ACTION MODAL -->
+<div id="cal-action-modal" class="hidden" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:10000; display:flex; align-items:center; justify-content:center;">
+    <div class="panel" style="max-width:320px; width:100%; border: 1px solid var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+        <h2 id="cal-modal-title" style="margin-bottom: 10px; border:none; padding:0;">Bill Action</h2>
+        <p id="cal-modal-desc" style="font-size:13px; color:var(--text-muted); margin-top:0; margin-bottom:20px;"></p>
+        
+        <input type="hidden" id="cal-modal-type">
+        <input type="hidden" id="cal-modal-id">
+        <input type="hidden" id="cal-modal-date">
+        <input type="hidden" id="cal-modal-name">
+        <input type="hidden" id="cal-modal-amount">
+        
+        <button class="btn btn-secondary" style="margin-bottom:10px; font-size: 15px;" onclick="calAction('paid')">Mark as Paid</button>
+        <button class="btn btn-warning" style="margin-bottom:10px; color:#fff; font-size: 15px;" onclick="calAction('unpaid')">Mark as Unpaid</button>
+        <button class="btn btn-danger hidden" id="cal-modal-delete" style="margin-bottom:10px;" onclick="calAction('delete')">Delete from Ledger</button>
+        <button class="btn" style="background:var(--border);" onclick="closeCalModal()">Cancel</button>
+    </div>
+</div>
+
 <div id="auth-screen">
     <h2>Secure Vault</h2>
     <div id="auth-error"></div>
@@ -163,7 +202,7 @@
 <div class="container hidden" id="app-screen">
     <header>
         <div class="title-area">
-            <h1>Command Center</h1>
+            <h1>Aamir's Finance Tracker</h1>
             <p style="margin:0; font-size: 13px; color: var(--text-muted); font-weight: 500;" id="user-email-display"></p>
         </div>
         <div class="controls">
@@ -266,7 +305,7 @@
         </div>
     </div>
 
-    <!-- TAB 2: BILLS & CALENDAR -->
+    <!-- TAB 2: BILLS TRACKER & CALENDAR -->
     <div id="tab-bills" class="tab-content">
         <div class="main-grid">
             <div>
@@ -300,12 +339,12 @@
 
             <div>
                 <div class="panel" style="height: 100%;">
-                    <h2 style="margin-bottom:5px;">Universal Calendar</h2>
+                    <h2 style="margin-bottom:5px;">Interactive Calendar</h2>
                     <div style="display:flex; gap:10px; font-size:11px; margin-bottom:20px; color:var(--text-muted); font-weight:600; flex-wrap:wrap;">
-                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px dashed var(--info);background:rgba(59,130,246,0.1)"></div> Expected</span>
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid #0EA5E9;background:#0284C7"></div> Expected (Click to pay)</span>
                         <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--border);background:var(--bg-panel)"></div> Paid Exp.</span>
-                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--warning);background:rgba(245,158,11,0.1)"></div> Unpaid</span>
-                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--secondary);background:rgba(16,185,129,0.1)"></div> Income</span>
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--warning);background:#D97706"></div> Unpaid</span>
+                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px;height:10px;border:1px solid var(--secondary);background:#059669"></div> Income</span>
                     </div>
                     <div id="calendar-container"></div>
                 </div>
@@ -433,7 +472,7 @@
 </div>
 
 <footer class="app-footer">
-    Elite Cloud Finance Tracker • <strong>Version 2.7</strong><br>
+    Aamir's Finance Tracker • <strong>Version 2.8</strong><br>
     Generated: April 6, 2026
 </footer>
 
@@ -527,7 +566,7 @@
     async function saveDataToCloud() { if (currentUser) await setDoc(doc(db, "users", currentUser.uid), data); }
     function updateUI(save = true) { if(save) saveDataToCloud(); renderCategories(); renderLedger(); updateDashboard(); renderCreditCards(); renderEventsTab(); renderMasterBills(); }
 
-    // --- MASTER BILLS (V2.7 UPDATED FOR CALENDAR PICKER) ---
+    // --- MASTER BILLS ---
     const mbForm = document.getElementById('master-bill-form');
     if(mbForm) {
         mbForm.addEventListener('submit', function(e) { 
@@ -535,21 +574,12 @@
             const name = document.getElementById('mb-name').value;
             const amount = parseFloat(document.getElementById('mb-amount').value);
             const dateStr = document.getElementById('mb-date').value;
+            const day = parseInt(dateStr.split('-')[2]); // Extracts the day perfectly
             
-            // Extract the exact day of the month from the selected calendar date
-            // Using split prevents timezone shifting issues that happen with new Date()
-            const day = parseInt(dateStr.split('-')[2]);
-            
-            data.bills.push({ 
-                id: Date.now().toString(), 
-                name: name, 
-                amount: amount, 
-                dueDate: day 
-            }); 
+            data.bills.push({ id: Date.now().toString(), name: name, amount: amount, dueDate: day }); 
             this.reset(); updateUI(); showToast('✅ Bill added to Blueprint!'); 
         });
     }
-    
     window.delMasterBill = function(id) { data.bills = data.bills.filter(b => b.id !== id); updateUI(); showToast('🗑️ Bill removed', true); }
     
     function renderMasterBills() {
@@ -563,19 +593,91 @@
         renderBillCalendar();
     }
 
+    // --- INTERACTIVE CALENDAR MODAL LOGIC ---
+    window.openCalModal = function(type, id, date, name, amount) {
+        document.getElementById('cal-modal-type').value = type;
+        document.getElementById('cal-modal-id').value = id;
+        document.getElementById('cal-modal-date').value = date;
+        document.getElementById('cal-modal-name').value = name;
+        document.getElementById('cal-modal-amount').value = amount;
+        document.getElementById('cal-modal-title').innerText = name;
+        document.getElementById('cal-modal-desc').innerText = `Scheduled for ${date}`;
+        
+        if(type === 'entry') document.getElementById('cal-modal-delete').classList.remove('hidden');
+        else document.getElementById('cal-modal-delete').classList.add('hidden');
+        
+        document.getElementById('cal-action-modal').classList.remove('hidden');
+    }
+
+    window.closeCalModal = function() {
+        document.getElementById('cal-action-modal').classList.add('hidden');
+    }
+
+    window.calAction = function(action) {
+        let type = document.getElementById('cal-modal-type').value;
+        let id = document.getElementById('cal-modal-id').value;
+        let date = document.getElementById('cal-modal-date').value;
+        let name = document.getElementById('cal-modal-name').value;
+        let amount = parseFloat(document.getElementById('cal-modal-amount').value);
+
+        if(type === 'master') {
+            if(action === 'paid' || action === 'unpaid') {
+                data.entries.push({
+                    id: Date.now().toString(), type: 'bill', name: name, amount: amount, date: date,
+                    subCat: '', tag: 'need', status: action, paycheck: 'none'
+                });
+                showToast(`✅ Logged as ${action}`);
+            }
+        } else if (type === 'entry') {
+            if(action === 'delete') {
+                data.entries = data.entries.filter(e => e.id !== id);
+                showToast(`🗑️ Removed from Ledger`, true);
+            } else if (action === 'paid' || action === 'unpaid') {
+                let entry = data.entries.find(e => e.id === id);
+                if(entry) entry.status = action;
+                showToast(`✅ Updated to ${action}`);
+            }
+        }
+        closeCalModal();
+        updateUI();
+    }
+
     function renderBillCalendar() {
         const calCont = document.getElementById('calendar-container');
         if(!calCont) return;
         const now = new Date(); const year = parseInt(document.getElementById('filterYear').value) || now.getFullYear(); const month = parseInt(document.getElementById('filterMonth').value) - 1 || now.getMonth();
         const firstDayIndex = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate();
         const actualEntries = data.entries.filter(e => { const [eYear, eMonth] = e.date.split('-'); return parseInt(eYear) === year && parseInt(eMonth) === (month + 1); });
+        
         let calHtml = `<div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:10px;"><div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div></div><div class="calendar-grid">`;
+        
         for(let i = 0; i < firstDayIndex; i++) { calHtml += `<div class="cal-day" style="opacity:0.2; background:transparent;"></div>`; }
+        
         for(let i = 1; i <= daysInMonth; i++) {
-            let isToday = (i === now.getDate() && month === now.getMonth() && year === now.getFullYear()); let dayNumStyle = isToday ? `background:var(--primary); color:white; padding:2px 6px; border-radius:4px; display:inline-block;` : ``;
-            let masterBills = data.bills.filter(b => b.dueDate === i); let pillsHtml = masterBills.map(b => `<div class="bill-pill pill-master" title="Recurring Blueprint: ${b.name}">🔄 $${b.amount.toFixed(0)} - ${b.name}</div>`).join('');
-            let dayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`; let loggedToday = actualEntries.filter(e => e.date === dayStr);
-            loggedToday.forEach(e => { let icon = e.type === 'income' ? '💵' : (e.status === 'unpaid' ? '⏳' : '✅'); let cssClass = e.status === 'unpaid' ? 'pill-unpaid' : (e.type === 'income' ? 'pill-income' : 'pill-paid'); pillsHtml += `<div class="bill-pill ${cssClass}" title="${e.name}">${icon} $${parseFloat(e.amount).toFixed(0)} - ${e.name}</div>`; });
+            let isToday = (i === now.getDate() && month === now.getMonth() && year === now.getFullYear()); 
+            let dayNumStyle = isToday ? `background:var(--primary); color:white; padding:2px 6px; border-radius:4px; display:inline-block;` : ``;
+            let dayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`; 
+            
+            let loggedToday = actualEntries.filter(e => e.date === dayStr);
+            let pillsHtml = '';
+
+            // 1. Plot Blueprint Bills (ONLY if they haven't been actually logged this month)
+            let masterBills = data.bills.filter(b => b.dueDate === i); 
+            masterBills.forEach(mb => {
+                let alreadyLogged = actualEntries.some(e => e.type === 'bill' && e.name === mb.name);
+                if(!alreadyLogged) {
+                    pillsHtml += `<div class="bill-pill pill-master" onclick="openCalModal('master', '${mb.id}', '${dayStr}', '${mb.name}', ${mb.amount})">🔄 $${mb.amount.toFixed(0)} - ${mb.name}</div>`;
+                }
+            });
+
+            // 2. Plot Actual Logged Entries
+            loggedToday.forEach(e => { 
+                let icon = e.type === 'income' ? '💵' : (e.status === 'unpaid' ? '⏳' : '✅'); 
+                let cssClass = e.status === 'unpaid' ? 'pill-unpaid' : (e.type === 'income' ? 'pill-income' : 'pill-paid'); 
+                let clickAttr = (e.type === 'bill' || e.type === 'expense' || e.type === 'debt_payment') ? `onclick="openCalModal('entry', '${e.id}', '${dayStr}', '${e.name}', ${e.amount})"` : '';
+                pillsHtml += `<div class="bill-pill ${cssClass}" ${clickAttr}>${icon} $${parseFloat(e.amount).toFixed(0)} - ${e.name}</div>`; 
+            });
+
             calHtml += `<div class="cal-day"><div class="cal-day-num"><span style="${dayNumStyle}">${i}</span></div>${pillsHtml}</div>`;
         }
         calHtml += `</div>`; calCont.innerHTML = calHtml;
@@ -662,7 +764,6 @@
     
     window.deleteEntry = function(id) { data.entries = data.entries.filter(x => x.id !== id.toString()); updateUI(); showToast('🗑️ Entry Deleted', true); };
 
-    // --- RE-INJECTED LEDGER FUNCTIONS ---
     function getFilteredEntries() {
         const mEl = document.getElementById('filterMonth'); const yEl = document.getElementById('filterYear');
         if(!mEl || !yEl) return [];
@@ -698,7 +799,7 @@
         });
     }
 
-    // --- V2.6 DASHBOARD ENGINE ---
+    // --- DASHBOARD ENGINE ---
     function updateDashboard() {
         const mSel = document.getElementById('filterMonth'); const ySel = document.getElementById('filterYear');
         if(!mSel || !ySel) return;
@@ -758,14 +859,8 @@
         if(billBody) {
             billBody.innerHTML = ''; let totalBillBud = 0; let combinedBills = {};
             
-            if(data.bills) {
-                data.bills.forEach(b => { combinedBills[b.name] = { bud: b.amount, act: 0 }; });
-            }
-            
-            for (const [name, act] of Object.entries(billMap)) { 
-                if(!combinedBills[name]) combinedBills[name] = {bud:0, act:0}; 
-                combinedBills[name].act += act; 
-            }
+            if(data.bills) { data.bills.forEach(b => { combinedBills[b.name] = { bud: b.amount, act: 0 }; }); }
+            for (const [name, act] of Object.entries(billMap)) { if(!combinedBills[name]) combinedBills[name] = {bud:0, act:0}; combinedBills[name].act += act; }
             
             for (const [name, vals] of Object.entries(combinedBills)) {
                 totalBillBud += vals.bud; 
