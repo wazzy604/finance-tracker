@@ -465,7 +465,7 @@
 </div>
 
 <footer class="app-footer">
-    Aamir's Finance Tracker • <strong>Version 2.8.1</strong><br>
+    Aamir's Finance Tracker • <strong>Version 2.8.2</strong><br>
     Generated: April 6, 2026
 </footer>
 
@@ -748,7 +748,6 @@
         data.bigPurchases.forEach(bp => { let spent = bp.expenses.reduce((a, b) => a + b.amount, 0); let pct = Math.min((spent / bp.budget) * 100, 100); let colorCls = pct > 100 ? 'fill-danger' : (pct > 80 ? 'fill-warn' : 'fill-target'); let expList = bp.expenses.map(a => `<div class="event-line-item"><span>${a.desc}</span><strong>$${a.amount.toFixed(2)}</strong></div>`).join(''); pCont.innerHTML += `<div class="event-card" style="border-color: rgba(245, 158, 11, 0.3);"><h3>${bp.name} <span><button class="btn btn-sm btn-danger" style="background:transparent; padding:0; color:var(--danger)" onclick="window.delPurchase('${bp.id}')">✖</button></span></h3><div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><span>Spent: <strong style="color:${pct>100 ? 'var(--danger)' : 'var(--text-main)'}">$${spent.toFixed(2)}</strong></span><span>Budget:$${bp.budget.toFixed(2)}</span></div><div class="progress-bar" style="margin-bottom: 15px;"><div class="progress-fill ${colorCls}" style="width: ${pct}%"></div></div><div style="background:rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px;">${expList || '<i style="font-size:12px; color:var(--text-muted)">No expenses tracked yet.</i>'}</div><button class="btn btn-sm btn-warning" style="background:transparent; border: 1px solid var(--warning); color:var(--warning); width:100%;" onclick="window.addPurchaseExp('${bp.id}')">+ Log Expense</button></div>`; });
     }
 
-    // --- PDF & CSV ENGINES RESTORED FULLY ---
     window.generatePDF = function() {
         showToast('📄 Generating Report...'); 
         const mSel = document.getElementById('filterMonth'); 
@@ -799,13 +798,32 @@
                 const rows = ev.target.result.split('\n'); 
                 let added = 0; 
                 for(let i = 1; i < rows.length; i++) { 
-                    if(!rows[i].trim()) continue; 
-                    const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g); 
-                    if(!cols) continue; 
-                    const c = cols.map(x => x.replace(/(^"|"$)/g, '').trim()); 
+                    let row = rows[i].trim();
+                    if(!row) continue; 
+                    
+                    let c = []; let inQ = false; let cur = '';
+                    for(let j=0; j<row.length; j++) {
+                        if(row[j] === '"') inQ = !inQ;
+                        else if(row[j] === ',' && !inQ) { c.push(cur.trim()); cur = ''; }
+                        else cur += row[j];
+                    }
+                    c.push(cur.trim());
+                    
                     if(c.length >= 8) { 
-                        data.entries.push({ id: c[0] || Date.now().toString() + i, date: c[1], name: c[2], type: c[3], subCat: c[4], tag: c[5], status: c[6], amount: parseFloat(c[7]) }); 
-                        added++; 
+                        let amt = parseFloat(c[7].replace(/[^0-9.-]+/g,""));
+                        if(!isNaN(amt)) {
+                            data.entries.push({ 
+                                id: c[0] || Date.now().toString() + i, 
+                                date: c[1], 
+                                name: c[2].replace(/^"|"$/g, ''), 
+                                type: c[3] || 'expense', 
+                                subCat: c[4] || '', 
+                                tag: c[5] || '', 
+                                status: c[6] || 'paid', 
+                                amount: amt 
+                            }); 
+                            added++; 
+                        }
                     } 
                 } 
                 showToast(`✅ Imported ${added} transactions!`); 
